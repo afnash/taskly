@@ -7,8 +7,8 @@ def list_todo_items(request):
     context = {'todo_list' : Todo.objects.all()}
     return render(request,'todos/todo_list.html',context)
 
-def home_page(request):
-    return render(request,'todos/home.html')
+def home(request):
+    return HttpResponse("welcome to taskly !")
 
 def insert_todo_item(request:HttpRequest):
    todo= Todo(content= request.POST['content'])
