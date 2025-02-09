@@ -1,22 +1,22 @@
-from django.shortcuts import render,redirect
-from django.http import HttpResponse,HttpRequest
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse, HttpRequest
 from .models import Todo
 
-# Create your views here.
 def list_todo_items(request):
-    context = {'todo_list' : Todo.objects.all()}
-    return render(request,'todos/todo_list.html',context)
+    context = {'todo_list': Todo.objects.all()}
+    return render(request, 'todos/todo_list.html', context)
 
 def home(request):
-    return HttpResponse("welcome to taskly !")
+    return HttpResponse("Welcome to Taskly!")
 
-def insert_todo_item(request:HttpRequest):
-   todo= Todo(content= request.POST['content'])
-   todo.save()
-   return redirect('/todos/list/')
+def insert_todo_item(request: HttpRequest):
+    content = request.POST.get('content', '').strip()
+    if content:  # Prevent saving empty todos
+        todo = Todo(content=content)
+        todo.save()
+    return redirect('list_todo_items')
 
-def delete_todo_item(request,todo_id):
-    todo_to_delete= Todo.objects.get(id=todo_id)
+def delete_todo_item(request, todo_id):
+    todo_to_delete = get_object_or_404(Todo, id=todo_id)
     todo_to_delete.delete()
-    return redirect('/todos/list/')
-
+    return redirect('list_todo_items')
